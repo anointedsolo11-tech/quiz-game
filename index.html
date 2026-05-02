@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #111; color: white; padding: 20px; }
+        button { padding: 12px 24px; margin: 5px; font-size: 16px; background: #2196F3; color: white; border: none; border-radius: 5px; }
+        #options button { display: block; width: 100%; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>Quiz Game</h1>
+    <div id="startScreen">
+        <p>Test your knowledge!</p>
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+    <div id="quizScreen" style="display:none;">
+        <p id="question"></p>
+        <div id="options"></div>
+        <p>Score: <span id="score">0</span></p>
+        <p id="timer"></p>
+    </div>
+    <div id="endScreen" style="display:none;">
+        <h2>Game Over!</h2>
+        <p id="finalScore"></p>
+        <button onclick="startQuiz()">Play Again</button>
+    </div>
+    <script>
+        var questions = [
+            {q:"Capital of Ghana?",o:["Accra","Kumasi","Tamale","Takoradi"],a:0},
+            {q:"How many regions in Ghana?",o:["10","14","16","12"],a:2},
+            {q:"First president of Ghana?",o:["Rawlings","Kufuor","Nkrumah","Atta Mills"],a:2},
+            {q:"Ghana currency?",o:["Dollar","Cedi","Naira","Pound"],a:1},
+            {q:"Independence year?",o:["1960","1957","1965","1950"],a:1}
+        ];
+        var score=0, current=0, timer, time=10;
+        function startQuiz(){score=0;current=0;document.getElementById("startScreen").style.display="none";document.getElementById("endScreen").style.display="none";document.getElementById("quizScreen").style.display="block";loadQ();}
+        function loadQ(){if(current>=questions.length){endQuiz();return;}time=10;document.getElementById("timer").innerHTML="Time: "+time+"s";document.getElementById("score").innerHTML=score;document.getElementById("question").innerHTML=questions[current].q;var o="";for(var i=0;i<questions[current].o.length;i++){o+='<button onclick="check('+i+')">'+questions[current].o[i]+'</button>';}document.getElementById("options").innerHTML=o;clearInterval(timer);timer=setInterval(function(){time--;document.getElementById("timer").innerHTML="Time: "+time+"s";if(time<=0){clearInterval(timer);current++;loadQ();}},1000);}
+        function check(c){clearInterval(timer);if(c===questions[current].a)score++;current++;loadQ();}
+        function endQuiz(){clearInterval(timer);document.getElementById("quizScreen").style.display="none";document.getElementById("endScreen").style.display="block";document.getElementById("finalScore").innerHTML="Score: "+score+"/"+questions.length;}
+    </script>
+</body>
+</html>
