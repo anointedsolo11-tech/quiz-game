@@ -27,19 +27,94 @@
         <p id="finalScore"></p>
         <button onclick="startQuiz()">Play Again</button>
     </div>
+
     <script>
-        var questions = [
+        var allQuestions = [
             {q:"Capital of Ghana?",o:["Accra","Kumasi","Tamale","Takoradi"],a:0},
             {q:"How many regions in Ghana?",o:["10","14","16","12"],a:2},
             {q:"First president of Ghana?",o:["Rawlings","Kufuor","Nkrumah","Atta Mills"],a:2},
             {q:"Ghana currency?",o:["Dollar","Cedi","Naira","Pound"],a:1},
-            {q:"Independence year?",o:["1960","1957","1965","1950"],a:1}
+            {q:"Independence year?",o:["1960","1957","1965","1950"],a:1},
+            {q:"Largest city in Ghana?",o:["Accra","Kumasi","Tamale","Takoradi"],a:1},
+            {q:"Ghana is in which continent?",o:["Asia","Europe","Africa","America"],a:2},
+            {q:"What does 'Akwaaba' mean?",o:["Goodbye","Welcome","Thank you","Sorry"],a:1},
+            {q:"Who won AFCON 1982?",o:["Nigeria","Ghana","Cameroon","Egypt"],a:1},
+            {q:"How many times has a day have 24 hours?",o:["Always","Sometimes","Never","Only Monday"],a:0},
+            {q:"What color is the Ghana flag top stripe?",o:["Green","Yellow","Red","Blue"],a:2},
+            {q:"What is the Ghana flag middle stripe?",o:["Green","Yellow","Red","Blue"],a:1},
+            {q:"What is the Ghana flag bottom stripe?",o:["Green","Yellow","Red","Blue"],a:0},
+            {q:"Ghana Black Stars star is what color?",o:["Red","Blue","Black","White"],a:2},
+            {q:"What ocean borders Ghana?",o:["Indian","Pacific","Atlantic","Arctic"],a:2},
+            {q:"Cocoa is Ghana's major what?",o:["Import","Export","Problem","Drink"],a:1},
+            {q:"Gold Coast was old name of?",o:["Nigeria","Ghana","Kenya","South Africa"],a:1},
+            {q:"What is the capital of Nigeria?",o:["Lagos","Abuja","Kano","Ibadan"],a:1},
+            {q:"What is 2 + 2?",o:["3","4","5","6"],a:1},
+            {q:"What is the largest continent?",o:["Africa","Asia","Europe","America"],a:1}
         ];
+        var questions = [];
         var score=0, current=0, timer, time=10;
-        function startQuiz(){score=0;current=0;document.getElementById("startScreen").style.display="none";document.getElementById("endScreen").style.display="none";document.getElementById("quizScreen").style.display="block";loadQ();}
-        function loadQ(){if(current>=questions.length){endQuiz();return;}time=10;document.getElementById("timer").innerHTML="Time: "+time+"s";document.getElementById("score").innerHTML=score;document.getElementById("question").innerHTML=questions[current].q;var o="";for(var i=0;i<questions[current].o.length;i++){o+='<button onclick="check('+i+')">'+questions[current].o[i]+'</button>';}document.getElementById("options").innerHTML=o;clearInterval(timer);timer=setInterval(function(){time--;document.getElementById("timer").innerHTML="Time: "+time+"s";if(time<=0){clearInterval(timer);current++;loadQ();}},1000);}
-        function check(c){clearInterval(timer);if(c===questions[current].a)score++;current++;loadQ();}
-        function endQuiz(){clearInterval(timer);document.getElementById("quizScreen").style.display="none";document.getElementById("endScreen").style.display="block";document.getElementById("finalScore").innerHTML="Score: "+score+"/"+questions.length;}
+
+        function startQuiz(){
+            score=0; current=0;
+            questions = allQuestions.slice().sort(function(){return Math.random()-0.5}).slice(0,10);
+            document.getElementById("startScreen").style.display="none";
+            document.getElementById("endScreen").style.display="none";
+            document.getElementById("quizScreen").style.display="block";
+            loadQ();
+        }
+        function loadQ(){
+            if(current>=questions.length){endQuiz();return;}
+            time=10;
+            document.getElementById("timer").innerHTML="Time: "+time+"s";
+            document.getElementById("score").innerHTML=score;
+            document.getElementById("question").innerHTML=questions[current].q;
+            var o="";
+            for(var i=0;i<questions[current].o.length;i++){
+                o+='<button onclick="check('+i+')">'+questions[current].o[i]+'</button>';
+            }
+            document.getElementById("options").innerHTML=o;
+            clearInterval(timer);
+            timer=setInterval(function(){
+                time--;
+                document.getElementById("timer").innerHTML="Time: "+time+"s";
+                if(time<=0){clearInterval(timer);current++;loadQ();}
+            },1000);
+        }
+        function check(c){
+            clearInterval(timer);
+            if(c===questions[current].a)score++;
+            current++;
+            loadQ();
+        }
+        function endQuiz(){
+            clearInterval(timer);
+            document.getElementById("quizScreen").style.display="none";
+            document.getElementById("endScreen").style.display="block";
+            document.getElementById("finalScore").innerHTML="Score: "+score+"/"+questions.length;
+        }
     </script>
+
+    <!-- PopCash Popunder -->
+    <script type="text/javascript">
+        var uid = '501707';
+        var wid = '753996';
+        var pop_tag = document.createElement('script');
+        pop_tag.src = '//cdn.popcash.net/show.js';
+        document.body.appendChild(pop_tag);
+        pop_tag.onerror = function() {
+            pop_tag = document.createElement('script');
+            pop_tag.src = '//cdn2.popcash.net/show.js';
+            document.body.appendChild(pop_tag)
+        };
+    </script>
+
+    <!-- RichAds Pops -->
+    <script src="https://richinfo.co/richpartners/pops/js/richads-pu-ob.js" data-pubid="1010270" data-siteid="395753" async data-cfasync="false"></script>
+
+    <!-- Adsterra Social Bar -->
+    <script src="https://bowlsharp.com/c2/6e/5a/c26e5a175a3b17d8bf301c3d1db44b82.js"></script>
+
+    <!-- Adsterra Popunder -->
+    <script src="https://bowlsharp.com/0a/25/31/0a2531c6cafa70a054f9b2e3e2c3d41d.js"></script>
 </body>
 </html>
