@@ -5,174 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Game</title>
     <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            background: #111;
-            color: white;
-            padding: 20px;
-        }
-        button {
-            padding: 12px 24px;
-            margin: 5px;
-            font-size: 16px;
-            background: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        #options button {
-            display: block;
-            width: 100%;
-            margin: 5px 0;
-        }
-        .hint-btn {
-            background: #FFC107;
-            color: black;
-            font-weight: bold;
-        }
+        body{font-family:sans-serif;text-align:center;background:#111;color:white;padding:20px;}
+        button{padding:12px 24px;margin:5px;font-size:16px;background:#2196F3;color:white;border:none;border-radius:5px;}
+        #options button{display:block;width:100%;margin:5px 0;}
+        .hint-btn{background:#FFC107;color:black;font-weight:bold;}
     </style>
-
-    <!-- ====== RICHADS PUSH NOTIFICATIONS (CPC - Per Click) ====== -->
-    <script type="module" src="https://richinfo.co/richpartners/push/js/rp-cl-ob.js?pubid=1010270&siteid=395750&niche=33" async data-cfasync="false"></script>
-
 </head>
 <body>
-
-    <!-- ====== QUIZ GAME START ====== -->
     <h1>Quiz Game</h1>
-    <div id="startScreen">
-        <p>20 Questions - Test Your Knowledge!</p>
-        <button onclick="startQuiz()">Start Quiz</button>
+    <div id="startScreen"><p>20 Questions - Test Your Knowledge!</p><button onclick="startQuiz()">Start Quiz</button></div>
+    <div id="quizScreen" style="display:none;">
+        <p id="question"></p><div id="options"></div>
+        <button class="hint-btn" onclick="showHint()">💡 Watch Ad for Hint</button>
+        <p>Score: <span id="score">0</span></p><p>Question: <span id="qnum">1</span>/20</p><p id="timer"></p>
     </div>
-    <div id="quizScreen" style="display: none;">
-        <p id="question"></p>
-        <div id="options"></div>
-        <button class="hint-btn" onclick="showHint()">Watch Ad for Hint</button>
-        <p>Score: <span id="score">0</span></p>
-        <p>Question: <span id="qnum">1</span>/20</p>
-        <p id="timer"></p>
-    </div>
-    <div id="endScreen" style="display: none;">
-        <h2>Game Over!</h2>
-        <p id="finalScore"></p>
-        <div id="starRating"></div>
+    <div id="endScreen" style="display:none;">
+        <h2>Game Over!</h2><p id="finalScore"></p><div id="starRating"></div>
         <button onclick="startQuiz()">Play Again</button>
     </div>
-
-    <!-- ====== ADSTERRA BANNER (Visible Ad) ====== -->
-    <div style="text-align: center; margin: 10px 0;">
-        <script>
-            atOptions = {
-                'key' : '8b69adcadf5abaeca5e5d18a72f61c0e',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-            };
-        </script>
+    <div style="text-align:center;margin:10px 0;">
+        <script>atOptions={'key':'8b69adcadf5abaeca5e5d18a72f61c0e','format':'iframe','height':250,'width':300,'params':{}};</script>
         <script src="https://bowlsharp.com/8b69adcadf5abaeca5e5d18a72f61c0e/invoke.js"></script>
     </div>
-
-    <!-- ====== QUIZ QUESTIONS ====== -->
     <script>
-        var allQuestions = [
-            {q:"Capital of Ghana?",o:["Accra","Kumasi","Tamale","Takoradi"],a:0,h:"Largest city in Ghana"},
-            {q:"Regions in Ghana?",o:["10","14","16","12"],a:2,h:"Changed from 10 to this"},
-            {q:"First president?",o:["Rawlings","Kufuor","Nkrumah","Atta Mills"],a:2,h:"Led Ghana to independence"},
-            {q:"Ghana currency?",o:["Dollar","Cedi","Naira","Pound"],a:1,h:"Replaced the old pound"},
-            {q:"Independence year?",o:["1960","1957","1965","1950"],a:1,h:"First sub-Saharan country"},
-            {q:"Largest city?",o:["Accra","Kumasi","Tamale","Takoradi"],a:1,h:"Not the capital"},
-            {q:"Ghana continent?",o:["Asia","Europe","Africa","America"],a:2,h:"Below Europe"},
-            {q:"Akwaaba means?",o:["Goodbye","Welcome","Thank you","Sorry"],a:1,h:"You hear it when arriving"},
-            {q:"AFCON 1982 winner?",o:["Nigeria","Ghana","Cameroon","Egypt"],a:1,h:"Black Stars took it"},
-            {q:"Hours in a day?",o:["12","24","36","48"],a:1,h:"Half of 48"},
-            {q:"Flag top stripe?",o:["Green","Yellow","Red","Blue"],a:2,h:"Color of sacrifice"},
-            {q:"Flag middle?",o:["Green","Yellow","Red","Blue"],a:1,h:"Color of mineral wealth"},
-            {q:"Flag bottom?",o:["Green","Yellow","Red","Blue"],a:0,h:"Color of forests"},
-            {q:"Star color?",o:["Red","Blue","Black","White"],a:2,h:"Black Stars"},
-            {q:"Ocean bordering?",o:["Indian","Pacific","Atlantic","Arctic"],a:2,h:"Between Africa and Americas"},
-            {q:"Cocoa is Ghana's?",o:["Import","Export","Problem","Drink"],a:1,h:"Sent to other countries"},
-            {q:"Gold Coast was?",o:["Nigeria","Ghana","Kenya","South Africa"],a:1,h:"Named after a mineral"},
-            {q:"Nigeria capital?",o:["Lagos","Abuja","Kano","Ibadan"],a:1,h:"Planned city"},
-            {q:"5+3=?",o:["6","7","8","9"],a:2,h:"Count fingers"},
-            {q:"Largest continent?",o:["Africa","Asia","Europe","America"],a:1,h:"Home to China and India"}
-        ];
-        var questions = [], score = 0, current = 0, timer, time = 15;
-
-        function startQuiz() {
-            score = 0;
-            current = 0;
-            questions = allQuestions.slice().sort(function() { return Math.random() - 0.5; });
-            document.getElementById("startScreen").style.display = "none";
-            document.getElementById("endScreen").style.display = "none";
-            document.getElementById("quizScreen").style.display = "block";
-            loadQ();
-        }
-
-        function loadQ() {
-            if (current >= questions.length) { endQuiz(); return; }
-            time = 15;
-            document.getElementById("timer").innerHTML = "Time: " + time + "s";
-            document.getElementById("score").innerHTML = score;
-            document.getElementById("qnum").innerHTML = (current + 1);
-            document.getElementById("question").innerHTML = questions[current].q;
-            var o = "";
-            for (var i = 0; i < questions[current].o.length; i++) {
-                o += '<button id="opt' + i + '" onclick="check(' + i + ')">' + questions[current].o[i] + '</button>';
-            }
-            document.getElementById("options").innerHTML = o;
-            clearInterval(timer);
-            timer = setInterval(function() {
-                time--;
-                document.getElementById("timer").innerHTML = "Time: " + time + "s";
-                if (time <= 0) { clearInterval(timer); current++; loadQ(); }
-            }, 1000);
-        }
-
-        function check(c) {
-            clearInterval(timer);
-            for (var i = 0; i < 4; i++) {
-                document.getElementById("opt" + i).disabled = true;
-                if (i === questions[current].a) document.getElementById("opt" + i).style.background = "#4CAF50";
-                if (i === c && c !== questions[current].a) document.getElementById("opt" + i).style.background = "#FF5252";
-            }
-            if (c === questions[current].a) score++;
-            setTimeout(function() { current++; loadQ(); }, 800);
-        }
-
-        function showHint() {
-            alert("HINT: " + questions[current].h);
-        }
-
-        function endQuiz() {
-            clearInterval(timer);
-            document.getElementById("quizScreen").style.display = "none";
-            document.getElementById("endScreen").style.display = "block";
-            document.getElementById("finalScore").innerHTML = "Score: " + score + "/20";
-            var s = "";
-            if (score >= 18) s = "5 Stars - Excellent!";
-            else if (score >= 14) s = "4 Stars - Great!";
-            else if (score >= 10) s = "3 Stars - Good!";
-            else if (score >= 5) s = "2 Stars - Keep trying!";
-            else s = "1 Star - Better luck next time!";
-            document.getElementById("starRating").innerHTML = s;
-        }
+        var allQuestions=[{q:"Capital of Ghana?",o:["Accra","Kumasi","Tamale","Takoradi"],a:0,h:"Largest city in Ghana"},{q:"Regions in Ghana?",o:["10","14","16","12"],a:2,h:"Changed from 10 to this"},{q:"First president?",o:["Rawlings","Kufuor","Nkrumah","Atta Mills"],a:2,h:"Led Ghana to independence"},{q:"Ghana currency?",o:["Dollar","Cedi","Naira","Pound"],a:1,h:"Replaced the old pound"},{q:"Independence year?",o:["1960","1957","1965","1950"],a:1,h:"First sub-Saharan country"},{q:"Largest city?",o:["Accra","Kumasi","Tamale","Takoradi"],a:1,h:"Not the capital"},{q:"Ghana continent?",o:["Asia","Europe","Africa","America"],a:2,h:"Below Europe"},{q:"Akwaaba means?",o:["Goodbye","Welcome","Thank you","Sorry"],a:1,h:"You hear it when arriving"},{q:"AFCON 1982 winner?",o:["Nigeria","Ghana","Cameroon","Egypt"],a:1,h:"Black Stars took it"},{q:"Hours in a day?",o:["12","24","36","48"],a:1,h:"Half of 48"},{q:"Flag top stripe?",o:["Green","Yellow","Red","Blue"],a:2,h:"Color of sacrifice"},{q:"Flag middle?",o:["Green","Yellow","Red","Blue"],a:1,h:"Color of mineral wealth"},{q:"Flag bottom?",o:["Green","Yellow","Red","Blue"],a:0,h:"Color of forests"},{q:"Star color?",o:["Red","Blue","Black","White"],a:2,h:"Black Stars"},{q:"Ocean bordering?",o:["Indian","Pacific","Atlantic","Arctic"],a:2,h:"Between Africa and Americas"},{q:"Cocoa is Ghana's?",o:["Import","Export","Problem","Drink"],a:1,h:"Sent to other countries"},{q:"Gold Coast was?",o:["Nigeria","Ghana","Kenya","South Africa"],a:1,h:"Named after a mineral"},{q:"Nigeria capital?",o:["Lagos","Abuja","Kano","Ibadan"],a:1,h:"Planned city"},{q:"5+3=?",o:["6","7","8","9"],a:2,h:"Count fingers"},{q:"Largest continent?",o:["Africa","Asia","Europe","America"],a:1,h:"Home to China and India"}];
+        var questions=[],score=0,current=0,timer,time=15;
+        function startQuiz(){score=0;current=0;questions=allQuestions.slice().sort(function(){return Math.random()-0.5});document.getElementById("startScreen").style.display="none";document.getElementById("endScreen").style.display="none";document.getElementById("quizScreen").style.display="block";loadQ();}
+        function loadQ(){if(current>=questions.length){endQuiz();return;}time=15;document.getElementById("timer").innerHTML="Time: "+time+"s";document.getElementById("score").innerHTML=score;document.getElementById("qnum").innerHTML=(current+1);document.getElementById("question").innerHTML=questions[current].q;var o="";for(var i=0;i<questions[current].o.length;i++){o+='<button id="opt'+i+'" onclick="check('+i+')">'+questions[current].o[i]+'</button>';}document.getElementById("options").innerHTML=o;clearInterval(timer);timer=setInterval(function(){time--;document.getElementById("timer").innerHTML="Time: "+time+"s";if(time<=0){clearInterval(timer);current++;loadQ();}},1000);}
+        function check(c){clearInterval(timer);for(var i=0;i<4;i++){document.getElementById("opt"+i).disabled=true;if(i===questions[current].a)document.getElementById("opt"+i).style.background="#4CAF50";if(i===c&&c!==questions[current].a)document.getElementById("opt"+i).style.background="#FF5252";}if(c===questions[current].a)score++;setTimeout(function(){current++;loadQ();},800);}
+        function showHint(){alert("HINT: "+questions[current].h);}
+        function endQuiz(){clearInterval(timer);document.getElementById("quizScreen").style.display="none";document.getElementById("endScreen").style.display="block";document.getElementById("finalScore").innerHTML="Score: "+score+"/20";var s="";if(score>=18)s="5 Stars - Excellent!";else if(score>=14)s="4 Stars - Great!";else if(score>=10)s="3 Stars - Good!";else if(score>=5)s="2 Stars - Keep trying!";else s="1 Star - Better luck next time!";document.getElementById("starRating").innerHTML=s;}
     </script>
-
-    <!-- ====== POPCASH POPUNDER (CPM - Per View) ====== -->
     <script type="text/javascript">
-        var uid = '501707';
-        var wid = '753996';
-        var pop_tag = document.createElement('script');
-        pop_tag.src = '//cdn.popcash.net/show.js';
-        document.body.appendChild(pop_tag);
-        pop_tag.onerror = function() {
-            pop_tag = document.createElement('script');
-            pop_tag.src = '//cdn2.popcash.net/show.js';
-            document.body.appendChild(pop_tag);
-        };
+        var uid='501707';var wid='753996';var pop_tag=document.createElement('script');
+        pop_tag.src='//cdn.popcash.net/show.js';document.body.appendChild(pop_tag);
+        pop_tag.onerror=function(){pop_tag=document.createElement('script');
+        pop_tag.src='//cdn2.popcash.net/show.js';document.body.appendChild(pop_tag)};
     </script>
-
 </body>
 </html>
